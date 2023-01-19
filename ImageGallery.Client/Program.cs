@@ -23,6 +23,11 @@ builder.Services.AddHttpClient("APIClient", client =>
     client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
 }).AddUserAccessTokenHandler();
 
+builder.Services.AddHttpClient("IDPClient", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:5001/");
+});
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -48,6 +53,7 @@ builder.Services.AddAuthentication(options =>
     options.Scope.Add("imagegalleryapi.read");
     options.Scope.Add("imagegalleryapi.write");
     options.Scope.Add("country");
+    options.Scope.Add("offline_access");
     options.ClaimActions.MapJsonKey("role", "role");
     options.ClaimActions.MapJsonKey("country", "country");
     options.TokenValidationParameters = new()
