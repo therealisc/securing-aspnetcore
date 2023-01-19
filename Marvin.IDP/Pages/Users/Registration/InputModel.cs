@@ -25,6 +25,8 @@ public class InputModel
     [Required]
     [Display(Name = "Family name")]
     public string FamilyName { get; set; }
+    
+    public string Email { get; set; }
 
     [Required]
     [MaxLength(2)]
