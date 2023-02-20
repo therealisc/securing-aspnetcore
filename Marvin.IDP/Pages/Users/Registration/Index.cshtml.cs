@@ -49,10 +49,10 @@ public class IndexModel : PageModel
 
         var userToCreate = new Entities.User
         {
-            Password = Input.Password,
             UserName = Input.UserName,
             Subject = Guid.NewGuid().ToString(),
-            Active = true
+            Email = Input.Email,
+            Active = false
         };
 
         userToCreate.Claims.Add(new Entities.UserClaim()
@@ -73,21 +73,30 @@ public class IndexModel : PageModel
             Value = Input.FamilyName
         });
 
-        _localUserService.AddUser(userToCreate);
+        _localUserService.AddUser(userToCreate, Input.Password);
         await _localUserService.SaveChangesAsync();
 
-        var isUser = new IdentityServerUser(userToCreate.Subject)
-        {
-            DisplayName = userToCreate.UserName
-        };
+        // create an activation link
+        // we use Url.PageLink
+        var activationLink = Url.PageLink("/users/activation/index", values: new {securityCode = userToCreate.Subject});
 
-        await HttpContext.SignInAsync(isUser);
+        Console.WriteLine(activationLink);
+        
 
-        if(_interaction.IsValidReturnUrl(Input.ReturnUrl) || Url.IsLocalUrl(Input.ReturnUrl))
-        {
-            return Redirect(Input.ReturnUrl);
-        }
+        return Redirect("~/Users/ActivationCodeSent");
 
-        return Redirect("~/");
+        //var isUser = new IdentityServerUser(userToCreate.Subject)
+        //{
+        //    DisplayName = userToCreate.UserName
+        //};
+
+        //await HttpContext.SignInAsync(isUser);
+
+        //if(_interaction.IsValidReturnUrl(Input.ReturnUrl) || Url.IsLocalUrl(Input.ReturnUrl))
+        //{
+        //    return Redirect(Input.ReturnUrl);
+        //}
+
+        //return Redirect("~/");
     }
 }
