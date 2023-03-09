@@ -1,13 +1,11 @@
 using Duende.IdentityServer;
 using Marvin.IDP.DbContexts;
 using Marvin.IDP.Services;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Marvin.IDP;
 
@@ -30,27 +28,27 @@ internal static class HostingExtensions
         });
 
 
-//        builder.Services.AddDataProtection()
-//            .PersistKeysToAzureBlobStorage(
-//                new Uri(builder.Configuration["DataProtection:Keys"]),
-//                azureCredential)
-//            .ProtectKeysWithAzureKeyVault(
-//                new Uri(builder.Configuration["DataProtection:ProtectionKeyForKeys"]),
-//                azureCredential);
-//
-//        var secretClient = new SecretClient(
-//               new Uri(builder.Configuration["KeyVault:RootUri"]),
-//               azureCredential);
-//
-//        var secretResponse = secretClient.GetSecret(
-//            builder.Configuration["KeyVault:CertificateName"]);
-//
-//        var signingCertificate = new X509Certificate2(
-//            Convert.FromBase64String(secretResponse.Value.Value),
-//            (string)null,
-//            X509KeyStorageFlags.MachineKeySet);
-//
-//
+        //        builder.Services.AddDataProtection()
+        //            .PersistKeysToAzureBlobStorage(
+        //                new Uri(builder.Configuration["DataProtection:Keys"]),
+        //                azureCredential)
+        //            .ProtectKeysWithAzureKeyVault(
+        //                new Uri(builder.Configuration["DataProtection:ProtectionKeyForKeys"]),
+        //                azureCredential);
+        //
+        //        var secretClient = new SecretClient(
+        //               new Uri(builder.Configuration["KeyVault:RootUri"]),
+        //               azureCredential);
+        //
+        //        var secretResponse = secretClient.GetSecret(
+        //            builder.Configuration["KeyVault:CertificateName"]);
+        //
+        //        var signingCertificate = new X509Certificate2(
+        //            Convert.FromBase64String(secretResponse.Value.Value),
+        //            (string)null,
+        //            X509KeyStorageFlags.MachineKeySet);
+        //
+        //
         // certificate in KeyVault: 
         //  - certificate resource (public key, metadata)
         //  - key resource (private key)
@@ -59,7 +57,7 @@ internal static class HostingExtensions
         // uncomment if you want to add a UI
         builder.Services.AddRazorPages();
 
-        builder.Services.AddScoped<IPasswordHasher<Entities.User>, 
+        builder.Services.AddScoped<IPasswordHasher<Entities.User>,
             PasswordHasher<Entities.User>>();
 
         builder.Services.AddScoped<ILocalUserService, LocalUserService>();
@@ -140,13 +138,13 @@ internal static class HostingExtensions
 
         return builder.Build();
     }
-    
+
     public static WebApplication ConfigurePipeline(this WebApplication app)
     {
         app.UseForwardedHeaders();
 
         app.UseSerilogRequestLogging();
-    
+
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
